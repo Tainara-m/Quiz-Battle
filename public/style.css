@@ -1,0 +1,316 @@
+/* ============================================================
+   QUIZ BATTLE — style.css
+   Paleta: arena escura + violeta/magenta como cores de "energia"
+   Fonte mono para números/rótulos (sensação de placar),
+   fonte do sistema para leitura confortável das perguntas.
+   ============================================================ */
+
+:root {
+  --bg: #0b0e27;
+  --panel: #141936;
+  --panel-border: #2a3166;
+  --text: #e7e6fa;
+  --muted: #8c90be;
+  --violeta: #7b5cff;
+  --magenta: #ff3d77;
+  --ciano: #39e6c4;
+  --erro: #ff5d5d;
+
+  --fonte-mono: "Courier New", ui-monospace, Menlo, monospace;
+  --fonte-base: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(123, 92, 255, 0.18), transparent 45%),
+    radial-gradient(circle at 85% 90%, rgba(255, 61, 119, 0.14), transparent 45%),
+    var(--bg);
+  font-family: var(--fonte-base);
+  color: var(--text);
+}
+
+.arena {
+  width: 100%;
+  max-width: 480px;
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  padding: 28px 26px 32px;
+  position: relative;
+}
+
+/* Cantos estilo "moldura de HUD" — reforça o clima de arena/jogo */
+.arena::before,
+.arena::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--ciano);
+  opacity: 0.7;
+}
+.arena::before {
+  top: -1px;
+  left: -1px;
+  border-right: none;
+  border-bottom: none;
+}
+.arena::after {
+  bottom: -1px;
+  right: -1px;
+  border-left: none;
+  border-top: none;
+}
+
+.cabecalho {
+  text-align: center;
+  margin-bottom: 26px;
+}
+
+.cabecalho__tag {
+  display: inline-block;
+  font-family: var(--fonte-mono);
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--ciano);
+  border: 1px solid rgba(57, 230, 196, 0.4);
+  padding: 3px 10px;
+  border-radius: 3px;
+}
+
+.cabecalho__titulo {
+  margin: 12px 0 0;
+  font-size: 26px;
+  line-height: 1.25;
+  font-weight: 700;
+}
+
+.tela {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.tela-nome__intro {
+  color: var(--muted);
+  font-size: 14.5px;
+  line-height: 1.55;
+  margin: 0 0 6px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.campo input {
+  font-family: var(--fonte-base);
+  font-size: 16px;
+  color: var(--text);
+  background: #0e1230;
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+  padding: 12px 14px;
+}
+
+.campo input:focus {
+  outline: none;
+  border-color: var(--violeta);
+  box-shadow: 0 0 0 3px rgba(123, 92, 255, 0.25);
+}
+
+.campo-erro {
+  min-height: 18px;
+  margin: -6px 0 0;
+  font-size: 13px;
+  color: var(--erro);
+}
+
+.botao {
+  font-family: var(--fonte-base);
+  font-size: 15px;
+  font-weight: 600;
+  padding: 13px 18px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.botao--primario {
+  color: #0b0e27;
+  background: linear-gradient(90deg, var(--ciano), var(--violeta) 130%);
+}
+.botao--primario:hover {
+  filter: brightness(1.08);
+}
+.botao--primario:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: none;
+}
+
+.botao--fantasma {
+  color: var(--text);
+  background: transparent;
+  border: 1px solid var(--panel-border);
+}
+.botao--fantasma:hover {
+  border-color: var(--violeta);
+}
+
+/* ---------- Tela de quiz ---------- */
+
+.progresso__trilha {
+  height: 6px;
+  border-radius: 3px;
+  background: #0e1230;
+  overflow: hidden;
+}
+.progresso__barra {
+  height: 100%;
+  width: 10%;
+  background: linear-gradient(90deg, var(--violeta), var(--magenta));
+  transition: width 0.25s ease;
+}
+.progresso__texto {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--fonte-mono);
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.placar-mini {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--fonte-mono);
+  font-size: 13px;
+  color: var(--ciano);
+}
+
+.pergunta {
+  font-size: 19px;
+  line-height: 1.4;
+  margin: 4px 0 2px;
+}
+
+.alternativas {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.alternativa {
+  text-align: left;
+  font-family: var(--fonte-base);
+  font-size: 15px;
+  color: var(--text);
+  background: #0e1230;
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+  padding: 13px 14px;
+  cursor: pointer;
+}
+.alternativa:hover {
+  border-color: var(--violeta);
+}
+.alternativa[disabled] {
+  cursor: default;
+}
+.alternativa.correta {
+  border-color: var(--ciano);
+  background: rgba(57, 230, 196, 0.12);
+}
+.alternativa.errada {
+  border-color: var(--erro);
+  background: rgba(255, 93, 93, 0.12);
+}
+
+/* ---------- Tela de resultado / ranking ---------- */
+
+.resultado__selo {
+  font-family: var(--fonte-mono);
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--magenta);
+}
+.resultado__jogador {
+  margin: 4px 0 0;
+  color: var(--muted);
+}
+.resultado__pontos {
+  margin: 0;
+  font-family: var(--fonte-mono);
+  font-size: 52px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+}
+.resultado__legenda {
+  margin: 0 0 6px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.ranking-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ranking-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #0e1230;
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+  padding: 10px 14px;
+}
+
+.ranking-item__posicao {
+  font-family: var(--fonte-mono);
+  color: var(--muted);
+  width: 22px;
+}
+
+.ranking-item__nome {
+  flex: 1;
+  font-size: 14.5px;
+}
+
+.ranking-item__pontos {
+  font-family: var(--fonte-mono);
+  color: var(--ciano);
+}
+
+.ranking-item--top1 .ranking-item__posicao { color: var(--magenta); }
+
+.ranking-vazio {
+  color: var(--muted);
+  font-size: 14px;
+  text-align: center;
+  margin: 6px 0;
+}
+
+@media (max-width: 400px) {
+  .resultado__pontos {
+    font-size: 44px;
+  }
+}
