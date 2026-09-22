@@ -113,6 +113,9 @@ const rankingLista = document.getElementById("ranking-lista");
 const rankingVazio = document.getElementById("ranking-vazio");
 const botaoVoltarInicio = document.getElementById("botao-voltar-inicio");
 
+const rankingPreviewLista = document.getElementById("ranking-preview-lista");
+const rankingPreviewVazio = document.getElementById("ranking-preview-vazio");
+
 // ---------------------------------------------------------------
 // 4. Navegação entre telas
 // ---------------------------------------------------------------
@@ -253,34 +256,74 @@ async function salvarPontuacao() {
   }
 }
 
-// Busca o ranking atualizado no servidor e desenha a lista na tela.
+// Busca o ranking salvo no servidor (usado tanto pelo preview quanto pela tela cheia).
+async function buscarRanking() {
+  const resposta = await fetch("/ranking");
+  if (!resposta.ok) {
+    throw new Error("O servidor recusou a consulta.");
+  }
+  return resposta.json();
+}
+
+// Desenha uma lista de ranking dentro de um <ol> e controla a mensagem de "vazio".
+// Recebe os elementos como parâmetro para poder ser reaproveitada em telas diferentes.
+function desenharRanking(ranking, listaElemento, vazioElemento, mensagemVazio) {
+  listaElemento.innerHTML = "";
+
+  if (ranking.length === 0) {
+    vazioElemento.hidden = false;
+    vazioElemento.textContent = mensagemVazio;
+    return;
+  }
+
+  vazioElemento.hidden = true;
+
+  ranking.forEach((jogador, indice) => {
+    const item = document.createElement("li");
+    item.className = "ranking-item" + (indice === 0 ? " ranking-item--top1" : "");
+    item.innerHTML = `
+      <span class="ranking-item__posicao">${indice + 1}º</span>
+      <span class="ranking-item__nome">${escaparTexto(jogador.nome)}</span>
+      <span class="ranking-item__pontos">${jogador.pontos} pts</span>
+    `;
+    listaElemento.appendChild(item);
+  });
+}
+
+// Carrega o preview de ranking (top 5) na tela inicial.
+// É chamada assim que a página termina de carregar, sem precisar de clique.
+async function carregarRankingPreview() {
+  try {
+    const ranking = await buscarRanking();
+    desenharRanking(
+      ranking.slice(0, 5),
+      rankingPreviewLista,
+      rankingPreviewVazio,
+      "Ninguém pontuou ainda. Seja o primeiro!"
+    );
+  } catch (erro) {
+    desenharRanking([], rankingPreviewLista, rankingPreviewVazio,
+      "Não foi possível carregar o ranking agora."
+    );
+  }
+}
+
+// Abre a tela de ranking completo, sempre buscando os dados mais recentes.
 async function abrirRanking() {
   mostrarTela("tela-ranking");
-  rankingLista.innerHTML = "";
-  rankingVazio.hidden = true;
 
   try {
-    const resposta = await fetch("/ranking");
-    const ranking = await resposta.json();
-
-    if (ranking.length === 0) {
-      rankingVazio.hidden = false;
-      return;
-    }
-
-    ranking.forEach((jogador, indice) => {
-      const item = document.createElement("li");
-      item.className = "ranking-item" + (indice === 0 ? " ranking-item--top1" : "");
-      item.innerHTML = `
-        <span class="ranking-item__posicao">${indice + 1}º</span>
-        <span class="ranking-item__nome">${escaparTexto(jogador.nome)}</span>
-        <span class="ranking-item__pontos">${jogador.pontos} pts</span>
-      `;
-      rankingLista.appendChild(item);
-    });
+    const ranking = await buscarRanking();
+    desenharRanking(
+      ranking,
+      rankingLista,
+      rankingVazio,
+      "Ninguém pontuou ainda. Seja o primeiro!"
+    );
   } catch (erro) {
-    rankingVazio.hidden = false;
-    rankingVazio.textContent = "Não foi possível carregar o ranking. O servidor está rodando?";
+    desenharRanking([], rankingLista, rankingVazio,
+      "Não foi possível carregar o ranking. O servidor está rodando?"
+    );
   }
 }
 
@@ -303,9 +346,18 @@ botaoProxima.addEventListener("click", avancar);
 botaoSalvar.addEventListener("click", salvarPontuacao);
 
 botaoVerRankingInicio.addEventListener("click", abrirRanking);
-botaoVoltarInicio.addEventListener("click", () => mostrarTela("tela-nome"));
+botaoVoltarInicio.addEventListener("click", () => {
+  mostrarTela("tela-nome");
+  carregarRankingPreview();
+});
 
 botaoJogarDeNovo.addEventListener("click", () => {
   inputNome.value = "";
   mostrarTela("tela-nome");
+  carregarRankingPreview();
 });
+
+// ---------------------------------------------------------------
+// 8. Carrega o ranking automaticamente assim que a página abre
+// ---------------------------------------------------------------
+carregarRankingPreview();

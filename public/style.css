@@ -302,6 +302,28 @@ body {
 
 .ranking-item--top1 .ranking-item__posicao { color: var(--magenta); }
 
+.ranking-preview {
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--panel-border);
+}
+
+.ranking-preview__titulo {
+  margin: 0 0 10px;
+  font-family: var(--fonte-mono);
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--muted);
+}
+
+.ranking-preview .ranking-lista {
+  gap: 6px;
+}
+
+.ranking-preview .ranking-item {
+  padding: 8px 12px;
+}
+
 .ranking-vazio {
   color: var(--muted);
   font-size: 14px;

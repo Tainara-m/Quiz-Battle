@@ -7,21 +7,48 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
   <div class="arena">
+
     <header class="cabecalho">
       <span class="cabecalho__tag">QUIZ BATTLE</span>
       <h1 class="cabecalho__titulo">Desafio do Conhecimento</h1>
     </header>
+
     <!-- TELA 1: identificação do jogador -->
     <section class="tela" id="tela-nome" data-tela>
-      <p class="tela-nome__intro">Dez perguntas. Cada acerto vale 10 pontos. No fim, sua pontuação entra para o ranking da turma.</p>
-      <label class="campo" for="input-nome">Como você quer aparecer no ranking?
-        <input type="text" id="input-nome" maxlength="20" placeholder="Seu nome ou apelido" autocomplete="off"/>
+      <p class="tela-nome__intro">
+        Dez perguntas. Cada acerto vale 10 pontos. No fim, sua pontuação
+        entra para o ranking da turma.
+      </p>
+      <label class="campo" for="input-nome">
+        Como você quer aparecer no ranking?
+        <input
+          type="text"
+          id="input-nome"
+          maxlength="20"
+          placeholder="Seu nome ou apelido"
+          autocomplete="off"
+        />
       </label>
       <p class="campo-erro" id="erro-nome"></p>
-      <button class="botao botao--primario" id="botao-iniciar">Começar desafio</button>
-      <button class="botao botao--fantasma" id="botao-ver-ranking-inicio"> Ver ranking</button>
+      <button class="botao botao--primario" id="botao-iniciar">
+        Começar desafio
+      </button>
+      <button class="botao botao--fantasma" id="botao-ver-ranking-inicio">
+        Ver ranking completo
+      </button>
+
+      <!-- Preview do ranking: carregado automaticamente assim que a página abre -->
+      <div class="ranking-preview">
+        <p class="ranking-preview__titulo">Ranking atual</p>
+        <ol class="ranking-lista" id="ranking-preview-lista"></ol>
+        <p class="ranking-vazio" id="ranking-preview-vazio" hidden>
+          Ninguém pontuou ainda. Seja o primeiro!
+        </p>
+      </div>
     </section>
+
     <!-- TELA 2: pergunta em andamento -->
     <section class="tela" id="tela-quiz" data-tela hidden>
       <div class="progresso">
@@ -30,24 +57,37 @@
         </div>
         <span class="progresso__texto" id="progresso-texto">Pergunta 1 de 10</span>
       </div>
+
       <div class="placar-mini">
         <span id="quiz-jogador">Jogador</span>
         <span id="quiz-pontos">0 pts</span>
       </div>
+
       <h2 class="pergunta" id="pergunta-texto">Carregando pergunta...</h2>
+
       <div class="alternativas" id="alternativas"></div>
-      <button class="botao botao--primario" id="botao-proxima" hidden>Próxima pergunta</button>
+
+      <button class="botao botao--primario" id="botao-proxima" hidden>
+        Próxima pergunta
+      </button>
     </section>
+
     <!-- TELA 3: resultado final -->
     <section class="tela" id="tela-resultado" data-tela hidden>
       <span class="resultado__selo">RESULTADO</span>
       <p class="resultado__jogador" id="resultado-jogador">Jogador</p>
       <p class="resultado__pontos" id="resultado-pontos">0</p>
       <p class="resultado__legenda" id="resultado-legenda"></p>
-      <button class="botao botao--primario" id="botao-salvar">Salvar pontuação</button>
+
+      <button class="botao botao--primario" id="botao-salvar">
+        Salvar pontuação
+      </button>
       <p class="campo-erro" id="erro-salvar"></p>
-      <button class="botao botao--fantasma" id="botao-jogar-de-novo">Jogar novamente</button>
+      <button class="botao botao--fantasma" id="botao-jogar-de-novo">
+        Jogar novamente
+      </button>
     </section>
+
     <!-- TELA 4: ranking geral -->
     <section class="tela" id="tela-ranking" data-tela hidden>
       <span class="resultado__selo">RANKING</span>
@@ -55,9 +95,13 @@
       <p class="ranking-vazio" id="ranking-vazio" hidden>
         Ninguém pontuou ainda. Seja o primeiro!
       </p>
-      <button class="botao botao--primario" id="botao-voltar-inicio">Voltar ao início</button>
+      <button class="botao botao--primario" id="botao-voltar-inicio">
+        Voltar ao início
+      </button>
     </section>
+
   </div>
+
   <script src="script.js"></script>
 </body>
 </html>
