@@ -7,7 +7,7 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const RANKING_FILE = path.join(__dirname, "ranking.json");
 const PUBLIC_DIR = path.join(__dirname, "public");
 
