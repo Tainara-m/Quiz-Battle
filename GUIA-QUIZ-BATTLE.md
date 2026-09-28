@@ -1,4 +1,4 @@
-# Quiz Battle — Guia do Projeto
+# Quiz Battle — Guia do Projeto Para Fins de Estudo dos Alunos
 
 Bem-vindo(a) ao **Quiz Battle**! Neste projeto você vai construir um jogo de perguntas e respostas que **funciona de verdade com front-end e back-end separados** — sem Express, sem banco de dados, só JavaScript puro dos dois lados.
 
@@ -8,7 +8,7 @@ No final, você vai entender por que sites "de verdade" precisam de um servidor,
 
 ## 1. O que você vai construir
 
-Um jogo com 10 perguntas. Cada acerto vale 10 pontos. No final, o jogador salva sua pontuação, que fica guardada **mesmo depois de fechar o navegador** — e todo mundo da turma pode ver o ranking geral.
+Um jogo com 20 perguntas. Cada acerto vale 10 pontos. No final, o jogador salva sua pontuação, que fica guardada **mesmo depois de fechar o navegador** — e todo mundo da turma pode ver o ranking geral.
 
 ```
 FRONT-END (navegador)          BACK-END (servidor)
@@ -23,7 +23,7 @@ FRONT-END (navegador)          BACK-END (servidor)
 
 ---
 
-## 2. Por que isso é diferente do jogo anterior
+## 2. Por que isso é diferente
 
 Em um jogo só de front-end, tudo acontece dentro do navegador — se você fechar a aba, tudo se perde. Aqui, o placar final precisa:
 
