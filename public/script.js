@@ -72,6 +72,91 @@ const PERGUNTAS = [
     ],
     correta: 0,
   },
+  {
+    pergunta: "O que é o DOM?",
+    alternativas: [
+      "Um banco de dados do navegador",
+      "A representação da página em forma de objetos que o JS pode manipular",
+      "Um tipo de servidor",
+      "Um protocolo de rede",
+    ],
+    correta: 1,
+  },
+  {
+    pergunta: "Qual comando inicia o servidor Node.js do projeto?",
+    alternativas: ["npm start", "node server.js", "run server.js", "python server.js"],
+    correta: 1,
+  },
+  {
+    pergunta: "O que significa a sigla HTTP?",
+    alternativas: [
+      "Hyper Text Transfer Protocol",
+      "High Transfer Text Program",
+      "Home Tool Transfer Page",
+      "Hyper Terminal Transfer Process",
+    ],
+    correta: 0,
+  },
+  {
+    pergunta: "Qual módulo nativo do Node.js é usado para ler e escrever arquivos?",
+    alternativas: ["http", "fs", "path", "url"],
+    correta: 1,
+  },
+  {
+    pergunta: "No formato JSON, como uma lista de itens é representada?",
+    alternativas: ["Entre { }", "Entre [ ]", "Entre ( )", "Entre < >"],
+    correta: 1,
+  },
+  {
+    pergunta: "Qual é a função da tag <script> em um HTML?",
+    alternativas: [
+      "Definir o estilo da página",
+      "Carregar ou escrever código JavaScript",
+      "Criar uma tabela",
+      "Definir metadados do documento",
+    ],
+    correta: 1,
+  },
+  {
+    pergunta: "O que acontece quando o servidor responde com o código de status 404?",
+    alternativas: [
+      "Tudo certo, requisição bem-sucedida",
+      "O recurso pedido não foi encontrado",
+      "O servidor está fora do ar",
+      "Os dados foram salvos",
+    ],
+    correta: 1,
+  },
+  {
+    pergunta: "Por que colocamos apenas index.html, style.css e script.js dentro da pasta public/?",
+    alternativas: [
+      "Por acaso, não faz diferença",
+      "Porque são os únicos arquivos que o navegador pode acessar diretamente",
+      "Porque arquivos .js só funcionam dentro de pastas chamadas public",
+      "Para deixar o projeto mais bonito",
+    ],
+    correta: 1,
+  },
+  {
+    pergunta: "No fetch() usado para salvar a pontuação, o que o cabeçalho 'Content-Type: application/json' informa?",
+    alternativas: [
+      "O tamanho do arquivo enviado",
+      "O tipo de dado que está sendo enviado no corpo da requisição",
+      "O nome do jogador",
+      "A senha do servidor",
+    ],
+    correta: 1,
+  },
+  {
+    pergunta: "O que diferencia o front-end do back-end?",
+    alternativas: [
+      "Front-end roda no servidor, back-end no navegador",
+      "Front-end roda no navegador, back-end no servidor",
+      "Não existe diferença, são a mesma coisa",
+      "Front-end só existe em aplicativos mobile",
+    ],
+    correta: 1,
+  },
 ];
 
 // ---------------------------------------------------------------
@@ -100,7 +185,6 @@ const quizJogador = document.getElementById("quiz-jogador");
 const quizPontos = document.getElementById("quiz-pontos");
 const perguntaTexto = document.getElementById("pergunta-texto");
 const alternativasContainer = document.getElementById("alternativas");
-const botaoProxima = document.getElementById("botao-proxima");
 
 const resultadoJogador = document.getElementById("resultado-jogador");
 const resultadoPontos = document.getElementById("resultado-pontos");
@@ -158,16 +242,26 @@ function renderizarPergunta() {
 
   perguntaTexto.textContent = pergunta.pergunta;
   alternativasContainer.innerHTML = "";
-  botaoProxima.hidden = true;
 
   pergunta.alternativas.forEach((texto, indice) => {
     const botao = document.createElement("button");
     botao.className = "alternativa";
-    botao.textContent = texto;
+
+    const letra = document.createElement("span");
+    letra.className = "alternativa__letra";
+    letra.textContent = "ABCD"[indice];
+
+    const conteudo = document.createElement("span");
+    conteudo.textContent = texto;
+
+    botao.append(letra, conteudo);
     botao.addEventListener("click", () => responder(indice));
     alternativasContainer.appendChild(botao);
   });
 }
+
+// Tempo (em ms) que a resposta certa/errada fica destacada antes de avançar sozinha.
+const TEMPO_TRANSICAO = 900;
 
 function responder(indiceEscolhido) {
   if (estado.respondeuAtual) return; // impede clicar duas vezes
@@ -190,9 +284,9 @@ function responder(indiceEscolhido) {
     quizPontos.textContent = `${estado.pontos} pts`;
   }
 
-  const ultimaPergunta = estado.indiceAtual === PERGUNTAS.length - 1;
-  botaoProxima.hidden = false;
-  botaoProxima.textContent = ultimaPergunta ? "Ver resultado" : "Próxima pergunta";
+  // Depois de mostrar qual era a resposta certa por um instante,
+  // avança sozinho para a próxima pergunta (ou para o resultado, na última).
+  setTimeout(avancar, TEMPO_TRANSICAO);
 }
 
 function avancar() {
@@ -280,7 +374,7 @@ function desenharRanking(ranking, listaElemento, vazioElemento, mensagemVazio) {
 
   ranking.forEach((jogador, indice) => {
     const item = document.createElement("li");
-    item.className = "ranking-item" + (indice === 0 ? " ranking-item--top1" : "");
+    item.className = "ranking-item" + (indice < 3 ? ` ranking-item--top${indice + 1}` : "");
     item.innerHTML = `
       <span class="ranking-item__posicao">${indice + 1}º</span>
       <span class="ranking-item__nome">${escaparTexto(jogador.nome)}</span>
@@ -315,7 +409,7 @@ async function abrirRanking() {
   try {
     const ranking = await buscarRanking();
     desenharRanking(
-      ranking,
+      ranking.slice(0, 10),
       rankingLista,
       rankingVazio,
       "Ninguém pontuou ainda. Seja o primeiro!"
@@ -342,7 +436,6 @@ inputNome.addEventListener("keydown", (evento) => {
   if (evento.key === "Enter") iniciarQuiz();
 });
 
-botaoProxima.addEventListener("click", avancar);
 botaoSalvar.addEventListener("click", salvarPontuacao);
 
 botaoVerRankingInicio.addEventListener("click", abrirRanking);
